@@ -16,9 +16,27 @@ Faker::Config.locale = 'en-US'
 
 puts 'creating seeds'
 
-User.create(name: Faker::Name.name, phone_number: Faker::PhoneNumber.cell_phone , photo_id: Faker::LoremFlickr.image , email: Faker::Internet.free_email)
+s1 = School.create(name: Faker::Educator.primary_school, open:"7:00", close: "5:00", phone_number: Faker::PhoneNumber.cell_phone, address: Faker::Address.full_address)
+
+s2 = School.create(name: Faker::Educator.primary_school, open:"7:00", close: "5:00", phone_number: Faker::PhoneNumber.cell_phone, address: Faker::Address.full_address)
+
+p1 = User.create(name: Faker::Name.name, acct_type: "Parent", phone_number: Faker::PhoneNumber.cell_phone , photo_id: Faker::LoremFlickr.image , email: Faker::Internet.free_email)
+
+p2 = User.create(name: Faker::Name.name, acct_type: "Parent", phone_number: Faker::PhoneNumber.cell_phone , photo_id: Faker::LoremFlickr.image , email: Faker::Internet.free_email)
+
+t1 = User.create(name: Faker::Name.name, acct_type: "Teacher", phone_number: Faker::PhoneNumber.cell_phone , photo_id: Faker::LoremFlickr.image , email: Faker::Internet.free_email, school_id: s1.id)
+
+t2 = User.create(name: Faker::Name.name, acct_type: "Teacher", phone_number: Faker::PhoneNumber.cell_phone , photo_id: Faker::LoremFlickr.image , email: Faker::Internet.free_email, school_id: s2.id)
 
 
-School.create(name: Faker::Educator.primary_school, open:"7:00", close: "5:00", phone_number: Faker::PhoneNumber.cell_phone)
-School.create(name: Faker::Educator.primary_school, open:"7:00", close: "5:00", phone_number: Faker::PhoneNumber.cell_phone)
+Child.create(parent_id:p1.id, teacher_id:t1.id, name: Faker::Name.name, image: Faker::LoremFlickr.image, dob:"12/25/2012", gender:"Female", notes: "Allergic to swag", pick_up: true )
+
+Child.create(parent_id:p1.id, teacher_id:t2.id, name: Faker::Name.name, image: Faker::LoremFlickr.image, dob:"08/30/2010", gender:"Male", notes: "Gets hangry", pick_up: false )
+
+Child.create(parent_id:p2.id, teacher_id:t2.id, name: Faker::Name.name, image: Faker::LoremFlickr.image, dob:"01/15/2016", gender:"Male", notes: "Allergic to code", pick_up: false )
+
+Car.create(year: 2019, make: "Honda", model:"civic", color:"blue", plate: "yhfd27", user: p1)
+Car.create(year: 2012, make: "Ford", model:"f-150", color:"red", plate: "y7hfg2", user: p1)
+
+
 

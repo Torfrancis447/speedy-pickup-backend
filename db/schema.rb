@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_24_042414) do
+ActiveRecord::Schema[7.0].define(version: 2023_01_24_164057) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cars", force: :cascade do |t|
+    t.integer "year"
+    t.string "make"
+    t.string "color"
+    t.string "plate"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "model"
+    t.index ["user_id"], name: "index_cars_on_user_id"
+  end
 
   create_table "children", force: :cascade do |t|
     t.bigint "parent_id"
@@ -49,8 +61,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_24_042414) do
     t.string "photo_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "school_id"
   end
 
+  add_foreign_key "cars", "users"
   add_foreign_key "children", "users", column: "parent_id"
   add_foreign_key "children", "users", column: "teacher_id"
 end
