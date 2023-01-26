@@ -5,6 +5,7 @@ class UsersController < ApplicationController
         user = User.new(user_params)
         if user.valid?
             user.save
+            session[:user_id] = user.id
             render json: user, status: :created
         else
             render json: { errors: user.errors.full_messages }, status: 422
@@ -19,24 +20,29 @@ class UsersController < ApplicationController
     #       render json: { errors: user.errors.full_messages }, status: :unprocessable_entity
     #     end
     # end
+
+    def show
+        return render json: { error: "Not authorized" }, status: 401 unless session.include? :user_id
+        user = User.find_by(id: session[:user_id])
+        user_with_kids(user)
+
+    end
     
-    # def destroy
-    #     session.delete :user_id
-    #     head :no_content
-    # end
     
     
-    def show_parent
-        parent = User.find_by(id: params[:id])
+    
+    def show_children
+        parent = User.find_by(id: session[:user_id])
         parent_with_children = {
-            name: parent.name,
+            name: parent[:name],
             children: parent.parents_children 
         }
+        # debugger
         render json: parent_with_children, status: 200
         
     end
     
-    def show_teacher
+    def show_students
         teacher = User.find_by(id: params[:id])
         if teacher
             teacher_with_students = {
