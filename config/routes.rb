@@ -1,14 +1,14 @@
 Rails.application.routes.draw do
-  resources :children, only: :index
+  resources :children
   resources :schools, only: :index
-  # resources :user, only: :create
+  resources :users, only: [:update, :destroy]
   
   get'/students', to: 'users#show_students'
   get'/kids', to: 'users#show_children'
   
   
-  patch'/child/:id', to: 'users#update_children'
-
+  # patch'/child/:id', to: 'users#update_children'
+  get '/teachers', to: 'users#show_teachers'
   
   post'/login', to: 'sessions#create'
   delete'/logout', to:'sessions#destroy'

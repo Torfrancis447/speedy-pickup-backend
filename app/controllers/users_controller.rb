@@ -11,6 +11,32 @@ class UsersController < ApplicationController
             render json: { errors: user.errors.full_messages }, status: 422
         end
     end
+    def update
+        
+        user = User.find(params[:id])
+        if user
+            user.update!(user_params)
+            render json: user, status: :ok 
+        else
+            render json: { errors: ["user not found"] }, status: 404
+        end
+
+    end
+
+    def destroy
+        user = User.find(params[:id])
+        if user.acct_type == "Parent"
+            user.parents_children.destroy_all
+            user.destroy
+            head :no_content
+        elsif user.acct_type == "Teacher"
+            user.destroy
+            head :no_content
+        else
+        render json: { errors: "User not found" }, status: 404
+        end
+            
+    end
     
     # def create
     #     user = User.create(user_params)
@@ -28,7 +54,9 @@ class UsersController < ApplicationController
 
     end
     
-    
+    def show_teachers
+    render json: User.where(acct_type: "Teacher"), each_serializer: UserAcctTypeTeacherSerializer, status: 200
+    end
     
     
     def show_children
@@ -58,10 +86,14 @@ class UsersController < ApplicationController
         end
     end
 
+    
+
     private
 
     def user_params
         params.permit(:name, :user_name, :password, :password_confirmation, :photo_id, :acct_type, :phone_number, :email, :school_id)
     end
+
+    
 
 end

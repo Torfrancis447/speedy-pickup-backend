@@ -24,12 +24,27 @@ rescue_from ActiveRecord::RecordInvalid, with: :child_not_valid
         render json: child
     end
 
+    def update
+        child = Child.find(params[:id])
+        child.update!(child_params)
+        render json: child, status: :ok
+    end
 
+    def create
+        child = Child.create!(child_params)
+        render json: child, status: 201
+    end
+
+    def destroy
+        child = Child.find(params[:id])
+        child.destroy
+        head :no_content
+    end
 
     private
 
     def child_params
-    params.permit(:name, :dob, :image, :gender, :teacher_id )
+    params.require(:child).permit(:name, :dob, :image, :gender, :teacher_id, :parent_id, :notes, :pick_up)
     end
 
     def child_not_found
